@@ -1,4 +1,5 @@
 use std::io;
+use std::collections::HashMap;
 
 fn idiot_fib(n: u64) -> u64 {
     if n == 0 {
@@ -8,6 +9,22 @@ fn idiot_fib(n: u64) -> u64 {
     } else {
         idiot_fib(n - 1) + idiot_fib(n - 2)
     }
+}
+
+fn initialize_map() -> HashMap<u64, u64> {
+    let mut map = HashMap::new();
+    map.insert(0, 0);
+    map.insert(1, 1);
+    map
+}
+
+fn smart_fib(n: u64, map: &mut HashMap<u64, u64>) -> u64 {
+    if !map.contains_key(&n) {
+        let new_value = smart_fib(n - 1, map) + smart_fib(n - 2, map);
+        map.insert(n, new_value);   
+    }
+
+    map[&n]
 }
 
 fn main() {
@@ -29,6 +46,13 @@ fn main() {
         println!("Calling idiot fibonacci...");
         for i in 0..number {
             println!("Fib({:}) -> {:}", i, idiot_fib(i));
+        }
+
+        println!("Calling smart fibonacci...");
+        let mut map = initialize_map();
+
+        for i in 0..number {
+            println!("Fib({:}) -> {:}", i, smart_fib(i, &mut map));
         }
     }
     println!("Bye")
